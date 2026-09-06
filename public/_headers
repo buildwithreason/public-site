@@ -9,8 +9,26 @@
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Security headers for every response.
+#
+# Strict-Transport-Security: refuse plain HTTP for a year once a browser has
+#   seen this over HTTPS. Deliberately no `preload` — that submits the domain to
+#   a list baked into browser binaries and removal takes months. Its own
+#   decision, not a side effect of adding a header.
+# Cross-Origin-Opener-Policy: "allow-popups" rather than "same-origin", because
+#   signing in to comments opens a GitHub OAuth popup and the strict value
+#   severs its link to this window.
+# Cross-Origin-Resource-Policy: social cards and the feed are meant to be
+#   fetched from elsewhere.
+#
+# Content-Security-Policy is appended to THIS block at build time by
+# integrations/csp.mjs. Only one rule block may match a path — a second "/*"
+# block replaces this one rather than adding to it.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Cross-Origin-Resource-Policy: cross-origin

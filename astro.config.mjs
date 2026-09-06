@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import csp from "./integrations/csp.mjs";
 import { siteConfig } from "./src/config/site.ts";
 
 export default defineConfig({
@@ -12,7 +13,7 @@ export default defineConfig({
 
   trailingSlash: "never",
 
-  integrations: [sitemap()],
+  integrations: [sitemap(), csp({ site: siteConfig })],
 
   // The floating dev toolbar overlays the bottom of every page while running
   // `astro dev`. It is never part of a production build either way.
