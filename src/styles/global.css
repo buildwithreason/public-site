@@ -135,10 +135,14 @@
   --space-2xl: clamp(4.5rem, 3rem + 6vw, 7.5rem);
 
   /* Layout */
-  --page-max: 84rem;
-  /* The reading measure, ~68 characters. This does NOT grow with the viewport:
-     wide screens are filled with rails beside the text, never longer lines. */
-  --content-max: 39rem;
+  /* 90rem = rail(14) + measure(48) + rail(15) + two 4rem gaps + two 2.5rem
+     gutters. Sized so the article text column actually gets its full measure
+     rather than being squeezed by the gutter. */
+  --page-max: 90rem;
+  /* The reading measure, ~84 characters. Wider than the classic 65-75 on
+     purpose. It still does NOT grow with the viewport — wide screens are
+     filled with rails beside the text, not with longer lines. */
+  --content-max: 48rem;
   --gutter: clamp(1.25rem, 0.8rem + 2.2vw, 2.5rem);
   /* Width of the label/metadata rail. One value, used by the article rails,
      the section labels and the date column on cards, so everything on the
@@ -516,9 +520,9 @@ hr {
   border-radius: var(--radius);
   overflow-x: auto;
   tab-size: 2;
-  /* Code blocks deliberately break out past the prose measure to the column
-     edge — technical lines need the room that comfortable prose does not. */
-  width: min(46rem, calc(100vw - var(--gutter) * 2));
+  /* Prose now fills its whole column, so code fills it too rather than
+     breaking out past a narrower measure. */
+  width: 100%;
   max-width: none;
 }
 

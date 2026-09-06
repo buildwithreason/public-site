@@ -203,7 +203,7 @@ const jsonLd = {
   */
   .article-shell {
     display: grid;
-    grid-template-columns: minmax(0, 46rem);
+    grid-template-columns: minmax(0, var(--content-max));
     justify-content: center;
     align-items: start;
     column-gap: var(--space-2xl);
@@ -227,7 +227,7 @@ const jsonLd = {
 
   @media (min-width: 74rem) {
     .article-shell {
-      grid-template-columns: minmax(0, 46rem) minmax(0, 15rem);
+      grid-template-columns: minmax(0, var(--content-max)) minmax(0, 15rem);
     }
     .toc-rail { display: block; }
     .toc-inline { display: none; }
@@ -235,7 +235,7 @@ const jsonLd = {
 
   @media (min-width: 90rem) {
     .article-shell {
-      grid-template-columns: minmax(0, 14rem) minmax(0, 46rem) minmax(0, 15rem);
+      grid-template-columns: minmax(0, var(--rail)) minmax(0, var(--content-max)) minmax(0, 15rem);
       justify-content: space-between;
       column-gap: var(--space-xl);
     }
