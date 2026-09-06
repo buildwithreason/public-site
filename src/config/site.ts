@@ -47,10 +47,10 @@ export const siteConfig = {
   /** Leave a value empty to hide that link everywhere. */
   email: "",
   social: {
-    github: "https://github.com/KartikMavani",
+    github: "https://github.com/buildwithreason",
     linkedin: "",
-    x: "",
-    youtube: "",
+    x: "https://x.com/buildwithreas0n",
+    youtube: "https://www.youtube.com/@buildwithreasons",
     tiktok: "",
     reddit: "",
   },
