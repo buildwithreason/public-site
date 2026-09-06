@@ -1,11 +1,16 @@
 ---
 import { siteConfig } from "../config/site";
+import { getNav } from "../lib/content";
 import SocialLinks from "./SocialLinks.astro";
+import Newsletter from "./Newsletter.astro";
 
+const nav = await getNav();
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
+  <div class="wrap"><Newsletter /></div>
+
   <div class="wrap grid">
     <div class="identity">
       <p class="brand">{siteConfig.brand}</p>
@@ -16,7 +21,7 @@ const year = new Date().getFullYear();
     <div class="col">
       <p class="eyebrow">Site</p>
       <ul>
-        {siteConfig.nav.map((item) => (
+        {nav.map((item) => (
           <li><a href={item.href}>{item.label}</a></li>
         ))}
         <li><a href="/rss.xml">RSS</a></li>
@@ -41,6 +46,13 @@ const year = new Date().getFullYear();
     padding-top: var(--space-l);
     padding-bottom: var(--space-m);
     font-size: 0.875rem;
+  }
+
+  .site-footer :global(.newsletter) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    margin-bottom: var(--space-l);
   }
 
   .grid {

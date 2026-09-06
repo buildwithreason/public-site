@@ -1,6 +1,10 @@
 ---
 import { siteConfig } from "../config/site";
 import SocialLinks from "./SocialLinks.astro";
+import { getProjects } from "../lib/content";
+
+// Same reasoning as the nav: don't send anyone to an empty page.
+const hasProjects = (await getProjects()).length > 0;
 ---
 
 <section class="hero">
@@ -16,7 +20,7 @@ import SocialLinks from "./SocialLinks.astro";
 
     <div class="actions">
       <a class="primary" href="/writing">Read the writing</a>
-      <a class="secondary" href="/projects">Explore projects</a>
+      {hasProjects && <a class="secondary" href="/projects">Explore projects</a>}
     </div>
 
     <SocialLinks />

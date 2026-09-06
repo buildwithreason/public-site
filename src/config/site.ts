@@ -100,6 +100,35 @@ export const siteConfig = {
     lang: "en",
   },
 
+  // --- Analytics ------------------------------------------------------------
+  /**
+   * Cloudflare Web Analytics. Free, cookieless, and no personal data is
+   * collected, so it needs no consent banner in the EU or UK.
+   *
+   * Get the token: Cloudflare dashboard > Analytics & Logs > Web Analytics >
+   * Add a site > copy the value of `token` from the snippet it shows you.
+   * Empty means no analytics script is emitted at all.
+   */
+  analytics: {
+    cloudflareToken: "",
+  },
+
+  // --- Newsletter -----------------------------------------------------------
+  /**
+   * Email capture. RSS only reaches a narrow, technical slice of readers; a
+   * list is the part of the audience you actually own.
+   *
+   * `action` is the form POST endpoint from whichever provider you use
+   * (Buttondown, Kit, Ghost, Listmonk — all accept a plain form post).
+   * `emailField` is the input name that provider expects. Empty `action`
+   * means the form is not rendered anywhere.
+   */
+  newsletter: {
+    action: "",
+    emailField: "email",
+    blurb: "One substantial piece a week on software, systems, cloud and AI. No noise.",
+  },
+
   // --- Navigation -----------------------------------------------------------
   nav: [
     { label: "Writing", href: "/writing" },

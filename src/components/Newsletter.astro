@@ -1,0 +1,92 @@
+---
+import { siteConfig } from "../config/site";
+
+const { action, emailField, blurb } = siteConfig.newsletter;
+---
+
+{action && (
+  <section class="newsletter" aria-labelledby="newsletter-heading">
+    <p class="eyebrow" id="newsletter-heading">Subscribe</p>
+    <p class="blurb">{blurb}</p>
+
+    {/* A plain form post — it works with JavaScript disabled, and the
+        provider handles confirmation, so there is no endpoint of our own. */}
+    {/* target=_blank keeps the reader on the article while the provider
+        handles confirmation; browsers imply noopener for _blank. */}
+    <form action={action} method="post" target="_blank">
+      <label class="visually-hidden" for="newsletter-email">Email address</label>
+      <input
+        id="newsletter-email"
+        type="email"
+        name={emailField}
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+      />
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+)}
+
+<style>
+  .newsletter {
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+    max-width: 34rem;
+  }
+
+  .blurb {
+    margin-top: var(--space-2xs);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    text-wrap: pretty;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: var(--space-s);
+  }
+
+  input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    padding: 0.5rem 0.7rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+  }
+
+  input::placeholder { color: var(--ink-faint); }
+
+  button {
+    padding: 0.5rem 1.1rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--bg);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

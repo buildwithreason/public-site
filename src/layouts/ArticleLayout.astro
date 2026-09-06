@@ -52,7 +52,7 @@ const jsonLd = {
 <BaseLayout
   title={title}
   description={description}
-  image={image}
+  image={image ?? `/writing/${article.id}/og.png`}
   type="article"
   publishedTime={date}
   modifiedTime={updated}

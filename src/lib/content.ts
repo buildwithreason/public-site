@@ -147,3 +147,18 @@ export async function getCategories(): Promise<
     count,
   }));
 }
+
+/**
+ * Navigation with dead ends removed.
+ *
+ * /projects has no published entries yet, and a nav link leading to "No
+ * projects published yet" costs more credibility than the missing link does.
+ * The item returns on its own the moment a project ships — no flag to remember
+ * to flip.
+ */
+export async function getNav(): Promise<Array<{ label: string; href: string }>> {
+  const projects = await getProjects();
+  return siteConfig.nav.filter(
+    (item) => !(item.href === "/projects" && projects.length === 0)
+  );
+}

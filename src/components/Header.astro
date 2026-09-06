@@ -1,8 +1,10 @@
 ---
 import { siteConfig } from "../config/site";
+import { getNav } from "../lib/content";
 import ThemeToggle from "./ThemeToggle.astro";
 import Search from "./Search.astro";
 
+const nav = await getNav();
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isCurrent = (href: string) => path === href || path.startsWith(href + "/");
 ---
@@ -16,7 +18,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + "/")
 
     <nav aria-label="Primary">
       <ul>
-        {siteConfig.nav.map((item) => (
+        {nav.map((item) => (
           <li>
             <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
               {item.label}
