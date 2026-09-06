@@ -5,12 +5,14 @@ import SocialLinks from "./SocialLinks.astro";
 
 <section class="hero">
   <div class="wrap">
-    <p class="name">{siteConfig.name}</p>
+    {/* The person is the h1. The tagline is the claim made underneath it —
+        prominent, but never competing with the name for first read. */}
+    <h1 class="name">{siteConfig.name}</h1>
     <p class="role">{siteConfig.role} at {siteConfig.company}</p>
 
     <p class="disciplines">{siteConfig.disciplines.join(" · ")}</p>
 
-    <h1>{siteConfig.tagline}</h1>
+    <p class="tagline">{siteConfig.tagline}</p>
 
     <div class="actions">
       <a class="primary" href="/writing">Read the writing</a>
@@ -29,18 +31,19 @@ import SocialLinks from "./SocialLinks.astro";
   }
 
   .name {
-    font-family: var(--font-sans);
-    font-size: 0.82rem;
+    font-family: var(--font-serif);
+    font-size: var(--step-4);
     font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    line-height: 1.02;
+    letter-spacing: -0.028em;
     color: var(--ink);
   }
 
   .role {
-    margin-top: 0.35rem;
-    font-size: 0.92rem;
-    color: var(--ink-muted);
+    margin-top: var(--space-xs);
+    font-size: var(--step-1);
+    line-height: 1.3;
+    color: var(--ink-secondary);
   }
 
   .disciplines {
@@ -52,16 +55,17 @@ import SocialLinks from "./SocialLinks.astro";
     color: var(--accent);
   }
 
-  /* The tagline is the H1 — it is the actual claim the site makes. */
-  h1 {
+  /* Clearly subordinate to the name, but still the largest body text on the
+     page — it is the sentence the whole site exists to argue. */
+  .tagline {
     margin-top: var(--space-s);
-    max-width: 20ch;
+    max-width: 34ch;
     font-family: var(--font-serif);
-    font-size: var(--step-4);
-    font-weight: 600;
-    line-height: 1.06;
-    letter-spacing: -0.025em;
-    color: var(--ink);
+    font-size: var(--step-2);
+    line-height: 1.32;
+    letter-spacing: -0.008em;
+    color: var(--ink-secondary);
+    text-wrap: pretty;
   }
 
   .actions {
@@ -103,7 +107,7 @@ import SocialLinks from "./SocialLinks.astro";
   }
 
   @media (max-width: 34rem) {
-    h1 {
+    .tagline {
       max-width: none;
     }
   }
