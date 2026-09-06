@@ -48,7 +48,7 @@ export const siteConfig = {
   email: "",
   social: {
     github: "https://github.com/buildwithreason",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/kartikmavani",
     x: "https://x.com/buildwithreas0n",
     youtube: "https://www.youtube.com/@buildwithreasons",
     tiktok: "",
