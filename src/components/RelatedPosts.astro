@@ -1,0 +1,76 @@
+---
+import { formatDate, readingTime, type Article } from "../lib/content";
+
+interface Props {
+  posts: Article[];
+}
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section class="related" aria-labelledby="related-title">
+    <p class="eyebrow" id="related-title">Related reading</p>
+    <ul>
+      {posts.map((post) => (
+        <li>
+          <a href={`/writing/${post.id}`}>
+            <span class="title">{post.data.title}</span>
+            <span class="meta">
+              {post.data.category} · {formatDate(post.data.date)} · {readingTime(post.body)}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .related {
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-s) 0 0;
+  }
+
+  li + li {
+    margin-top: 0.15rem;
+  }
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.55rem 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  li:last-child a {
+    border-bottom: 0;
+  }
+
+  .title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  a:hover .title {
+    color: var(--accent);
+  }
+
+  .meta {
+    font-family: var(--font-sans);
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+  }
+</style>

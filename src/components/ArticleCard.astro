@@ -1,5 +1,5 @@
 ---
-import { formatDate, isoDate, readingTime, type Article } from "../lib/content";
+import { formatDate, isoDate, readingTime, slugify, type Article } from "../lib/content";
 
 interface Props {
   article: Article;
@@ -15,7 +15,7 @@ const href = `/writing/${article.id}`;
 <article class:list={["entry", variant]}>
   <div class="meta">
     <time datetime={isoDate(date)}>{formatDate(date)}</time>
-    <span class="category">{category}</span>
+    <a class="category" href={`/writing/categories/${slugify(category)}`}>{category}</a>
   </div>
 
   <div class="body">
@@ -50,6 +50,12 @@ const href = `/writing/${article.id}`;
 
   .category {
     color: var(--ink-muted);
+    text-decoration: none;
+    width: fit-content;
+  }
+
+  .category:hover {
+    color: var(--accent);
   }
 
   h3 {

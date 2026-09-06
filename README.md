@@ -224,6 +224,35 @@ public/
   _headers              Cloudflare caching and security headers
 ```
 
+## Reading and navigation features
+
+- **Table of contents** — built from the article's own h2/h3 headings, shown as a sticky
+  rail beside the text above 1184px and as a collapsed two-column block above the article
+  below it. Appears only when a piece has three or more sections. A scroll spy highlights
+  the current one.
+- **Search** — a ⌘K / Ctrl+K command palette over the writing index, with arrow-key
+  navigation. Built on a native `<dialog>`, so focus trapping, Escape and page inertness
+  come from the platform rather than from script. Field-weighted scoring: a title hit
+  outranks a tag, which outranks a body hit, and every term must match somewhere.
+- **Topics** — `/writing/tags` lists the six pillars and every tag with counts, and each
+  has its own archive page. Tags and categories are links everywhere they appear.
+- **Prev / next and related** — related posts are scored, not random: a shared pillar is
+  worth more than a shared tag, ties break towards the newer piece.
+- **Reading progress**, a **copy link** button, **copy buttons on code blocks**, and
+  **anchor links on headings** (which appear on hover).
+
+### The search index
+
+`/search.json` is generated at build time and fetched only when the palette is first
+opened. Article bodies are indexed to a **600 character cap** — deliberately. Indexing
+full bodies searches better but grows without bound, and at roughly one article a week
+the index would pass a megabyte within two years, downloaded in a single request. The cap
+holds it near 1KB per article.
+
+When deep full-text search starts to matter, that is the point to switch to a real index
+rather than to raise the cap — [Pagefind](https://pagefind.app) builds one at compile time
+and loads it in fragments, so it stays constant-cost as the archive grows.
+
 ## Design and performance notes
 
 - **Type.** Source Serif 4 for headlines and article body, Inter for UI and structural
@@ -232,8 +261,11 @@ public/
 - **Colour.** Warm off-white ground, charcoal ink, one restrained rust accent used only
   for links and marks. Light and dark are both first-class; dark follows the OS by default
   and the toggle overrides it.
-- **JavaScript.** Roughly 550 bytes total, inlined: a blocking theme-restore snippet and
-  the toggle handler. No framework, no hydration.
+- **JavaScript.** No framework, no hydration, no client-side routing. Every page carries
+  ~2.7KB uncompressed (theme restore, theme toggle, search palette). Article pages carry
+  ~8.1KB, the extra being the contents scroll spy, reading progress, copy buttons, heading
+  anchors and the lazy Giscus loader. Roughly 3KB gzipped for a page of long-form text —
+  worth knowing this grew from ~550 bytes when the reading features were added.
 - **Navigation** does not collapse behind a menu button — four short items fit a 320px
   viewport, so the links stay tappable and the script count stays at zero.
 - Code blocks deliberately extend past the prose measure to the column edge; prose stays

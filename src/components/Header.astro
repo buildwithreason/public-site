@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from "../config/site";
 import ThemeToggle from "./ThemeToggle.astro";
+import Search from "./Search.astro";
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isCurrent = (href: string) => path === href || path.startsWith(href + "/");
@@ -25,7 +26,10 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + "/")
       </ul>
     </nav>
 
-    <ThemeToggle />
+    <div class="actions">
+      <Search />
+      <ThemeToggle />
+    </div>
   </div>
 </header>
 
@@ -68,6 +72,12 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + "/")
 
   .wordmark:hover .brand {
     color: var(--accent);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
   }
 
   nav ul {

@@ -1,4 +1,5 @@
-# Cloudflare Pages header rules.
+# Cloudflare header rules. Honoured by both Pages and Workers static assets;
+# this site is currently served by Workers.
 # Hashed asset paths and vendored fonts never change contents, so they can be
 # cached indefinitely. HTML must revalidate so a new article appears immediately.
 

@@ -1,0 +1,115 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getTags, getCategories } from "../../../lib/content";
+
+const tags = await getTags();
+const categories = await getCategories();
+---
+
+<BaseLayout
+  title="Topics"
+  description="Every topic and pillar covered so far — browse the writing by subject rather than by date."
+>
+  <div class="wrap">
+    <header class="page-header measure">
+      <p class="eyebrow">Topics</p>
+      <h1>Browse by subject</h1>
+      <p class="standfirst">
+        The six pillars are the spine of the writing; tags are the finer grain within them.
+      </p>
+    </header>
+
+    <section class="block measure">
+      <h2 class="eyebrow">Pillars</h2>
+      <ul class="list">
+        {categories.map((c) => (
+          <li>
+            <a href={`/writing/categories/${c.slug}`}>
+              <span>{c.name}</span>
+              <span class="count">{c.count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="block measure">
+      <h2 class="eyebrow">Tags</h2>
+      {tags.length > 0 ? (
+        <ul class="list">
+          {tags.map((t) => (
+            <li>
+              <a href={`/writing/tags/${t.slug}`}>
+                <span>{t.name}</span>
+                <span class="count">{t.count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">No tags yet.</p>
+      )}
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  h1 {
+    margin-top: var(--space-xs);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .standfirst {
+    margin-top: var(--space-s);
+    font-family: var(--font-serif);
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  .block {
+    margin-top: var(--space-l);
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-s) 0 0;
+  }
+
+  .list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-s);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+  }
+
+  .list a:hover {
+    color: var(--accent);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  .empty {
+    margin-top: var(--space-s);
+    color: var(--ink-muted);
+  }
+</style>

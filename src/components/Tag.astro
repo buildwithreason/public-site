@@ -1,11 +1,14 @@
 ---
 interface Props {
   label: string;
+  /** When set the tag becomes a link to its archive page. */
+  href?: string;
 }
-const { label } = Astro.props;
+const { label, href } = Astro.props;
+const Element = href ? "a" : "span";
 ---
 
-<span class="tag">{label}</span>
+<Element class="tag" href={href}>{label}</Element>
 
 <style>
   .tag {
@@ -20,5 +23,12 @@ const { label } = Astro.props;
     border-radius: var(--radius);
     padding: 0.18rem 0.5rem;
     white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  a.tag:hover {
+    color: var(--accent);
+    border-color: var(--accent);
   }
 </style>
