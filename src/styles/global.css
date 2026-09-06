@@ -135,14 +135,14 @@
   --space-2xl: clamp(4.5rem, 3rem + 6vw, 7.5rem);
 
   /* Layout */
-  /* 90rem = rail(14) + measure(48) + rail(15) + two 4rem gaps + two 2.5rem
-     gutters. Sized so the article text column actually gets its full measure
-     rather than being squeezed by the gutter. */
-  --page-max: 90rem;
-  /* The reading measure, ~84 characters. Wider than the classic 65-75 on
-     purpose. It still does NOT grow with the viewport — wide screens are
-     filled with rails beside the text, not with longer lines. */
-  --content-max: 48rem;
+  /* 100rem = rail(14) + measure(58) + rail(15) + two 4rem gaps + two 2.5rem
+     gutters. Sized so the text column gets its full measure rather than being
+     squeezed by the rails and gutter. */
+  --page-max: 100rem;
+  /* The reading measure. Set wide on purpose, past the classic 45-75
+     characters. Line height is raised to match: a longer line needs more
+     leading for the eye to find the start of the next one. */
+  --content-max: 58rem;
   --gutter: clamp(1.25rem, 0.8rem + 2.2vw, 2.5rem);
   /* Width of the label/metadata rail. One value, used by the article rails,
      the section labels and the date column on cards, so everything on the
@@ -369,7 +369,7 @@ hr {
 .prose {
   font-family: var(--font-serif);
   font-size: var(--step-0);
-  line-height: 1.72;
+  line-height: 1.8;
   color: var(--ink-secondary);
   max-width: var(--content-max);
 }

@@ -1,51 +1,157 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import Tag from "../components/Tag.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 import type { Project } from "../lib/content";
+import type { MarkdownHeading } from "astro";
 
 interface Props {
   project: Project;
+  headings: MarkdownHeading[];
 }
 
-const { project } = Astro.props;
+const { project, headings } = Astro.props;
 const { title, description, year, status, tech, repo, demo, draft } = project.data;
 ---
 
 <BaseLayout title={title} description={description} noindex={draft}>
-  <article class="wrap">
-    <header class="project-header measure">
-      <p class="eyebrow">Project · {status} · {year}</p>
-      <h1>{title}</h1>
-      <p class="standfirst">{description}</p>
+  <div class="wrap project-shell">
+    <aside class="meta-rail">
+      <dl>
+        <dt>Status</dt>
+        <dd>{status}</dd>
 
-      {tech.length > 0 && (
-        <div class="tech">
-          {tech.map((t) => <Tag label={t} />)}
+        <dt>Year</dt>
+        <dd>{year}</dd>
+
+        {tech.length > 0 && (
+          <>
+            <dt>Built with</dt>
+            <dd class="rail-tech">{tech.map((t) => <Tag label={t} />)}</dd>
+          </>
+        )}
+
+        {(repo || demo) && (
+          <>
+            <dt>Links</dt>
+            <dd class="rail-links">
+              {repo && <a href={repo} target="_blank" rel="noopener">Source</a>}
+              {demo && <a href={demo} target="_blank" rel="noopener">Demo</a>}
+            </dd>
+          </>
+        )}
+      </dl>
+    </aside>
+
+    <article class="column">
+      <header class="project-header">
+        <p class="eyebrow">Project</p>
+        <h1>{title}</h1>
+        <p class="standfirst">{description}</p>
+
+        <div class="inline-meta">
+          <span>{status}</span><span aria-hidden="true">·</span><span>{year}</span>
         </div>
-      )}
 
-      {(repo || demo) && (
-        <div class="links">
-          {repo && <a href={repo} target="_blank" rel="noopener">Source</a>}
-          {demo && <a href={demo} target="_blank" rel="noopener">Demo</a>}
-        </div>
-      )}
-    </header>
+        {tech.length > 0 && (
+          <div class="tech">{tech.map((t) => <Tag label={t} />)}</div>
+        )}
 
-    <div class="prose">
-      <slot />
-    </div>
+        {(repo || demo) && (
+          <div class="links">
+            {repo && <a href={repo} target="_blank" rel="noopener">Source</a>}
+            {demo && <a href={demo} target="_blank" rel="noopener">Demo</a>}
+          </div>
+        )}
+      </header>
 
-    <footer class="project-footer measure">
-      <p><a href="/projects">&larr; All projects</a></p>
-    </footer>
-  </article>
+      <div class="toc-inline">
+        <TableOfContents headings={headings} />
+      </div>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <footer class="project-footer">
+        <p><a href="/projects">&larr; All projects</a></p>
+      </footer>
+    </article>
+
+    <aside class="rail toc-rail">
+      <div class="rail-inner">
+        <TableOfContents headings={headings} />
+      </div>
+    </aside>
+  </div>
 </BaseLayout>
 
 <style>
-  /* The whole page is the reading column, centred rather than pinned left. */
-  article {
-    --page-max: 46rem;
+  /* Same three zones as an article: metadata | write-up | contents. */
+  .project-shell {
+    display: grid;
+    grid-template-columns: minmax(0, var(--content-max));
+    justify-content: center;
+    align-items: start;
+    column-gap: var(--space-2xl);
+  }
+
+  .rail,
+  .meta-rail {
+    position: sticky;
+    top: var(--space-l);
+    padding-top: calc(var(--space-xl) + 0.5rem);
+    max-height: calc(100vh - var(--space-l) * 2);
+    overflow-y: auto;
+  }
+
+  .meta-rail,
+  .toc-rail { display: none; }
+  .toc-inline { display: block; }
+
+  @media (min-width: 74rem) {
+    .project-shell {
+      grid-template-columns: minmax(0, var(--content-max)) minmax(0, 15rem);
+    }
+    .toc-rail { display: block; }
+    .toc-inline { display: none; }
+  }
+
+  @media (min-width: 90rem) {
+    .project-shell {
+      grid-template-columns: minmax(0, var(--rail)) minmax(0, var(--content-max)) minmax(0, 15rem);
+      justify-content: space-between;
+      column-gap: var(--space-xl);
+    }
+    .meta-rail { display: block; }
+    .column .inline-meta,
+    .column .tech,
+    .column .links { display: none; }
+  }
+
+  .meta-rail dl { margin: 0; font-family: var(--font-sans); font-size: 0.78rem; }
+  .meta-rail dt {
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .meta-rail dd { margin: 0.2rem 0 var(--space-s); color: var(--ink-secondary); }
+  .rail-tech { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .rail-links { display: flex; flex-direction: column; gap: 0.3rem; }
+  .meta-rail a {
+    color: var(--ink-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta-rail a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .inline-meta {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: var(--space-s);
+    font-size: 0.82rem;
+    color: var(--ink-faint);
   }
 
   .project-header {
