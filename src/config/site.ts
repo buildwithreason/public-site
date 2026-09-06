@@ -30,11 +30,15 @@ export const siteConfig = {
 
   // --- Deployment -----------------------------------------------------------
   /**
-   * Canonical origin, no trailing slash.
-   * PLACEHOLDER — swap for the real domain once it is registered.
-   * Used for canonical URLs, sitemap, RSS and Open Graph image URLs.
+   * Canonical origin, no trailing slash. Must match the origin that actually
+   * serves the site — canonical tags, the sitemap, RSS links and Open Graph
+   * URLs are all built from it, so a stale value points search engines and
+   * social cards at a domain that does not resolve.
+   *
+   * Currently the Cloudflare Workers deployment. Change this in the same commit
+   * that points the real domain at the site.
    */
-  url: "https://kartikmavani.com",
+  url: "https://kartik-mavani-site.kartikmavani.workers.dev",
 
   /** Locale used for <html lang> and date formatting. */
   locale: "en",

@@ -122,8 +122,29 @@ Connect to Git**.
 No environment variables and no server runtime — the output is static files. Every push
 to the default branch deploys; pull requests get preview URLs automatically.
 
-Add the custom domain under **Custom domains** once DNS is ready, and update
-`siteConfig.url` in the same change so metadata matches.
+### Currently deployed on Cloudflare Workers
+
+The live site is served by Workers static assets at
+`https://kartik-mavani-site.kartikmavani.workers.dev`, not Pages. Both serve the same
+`dist/` output and the build settings above are unchanged; Workers is simply the newer
+of the two products.
+
+**`siteConfig.url` must match whatever origin actually serves the site.** Canonical tags,
+`og:url`, the sitemap and every RSS link are built from it, so a stale value points search
+engines and social cards at a domain that does not resolve. Change it in the same commit
+that points a new domain at the site — that is the single edit a domain migration needs.
+
+Two things to know about the current deployment:
+
+- **Trailing slashes.** Workers static assets defaults to `auto-trailing-slash`, so
+  `/writing/kafka-ordering` 301s to `/writing/kafka-ordering/` while Astro emits the
+  slash-free form in canonical tags and the sitemap. Harmless — search engines follow the
+  redirect — but it can be tidied by setting `html_handling: "drop-trailing-slash"` in the
+  Workers config, or by switching Astro to `trailingSlash: "always"`. Left alone for now
+  rather than changing deployment behaviour blind.
+- **Indexing a temporary domain.** `*.workers.dev` is indexable. If a permanent domain is
+  coming soon, consider whether you want search engines building up an index against a URL
+  you intend to abandon.
 
 `public/_headers` sets immutable caching for hashed assets and fonts, plus baseline
 security headers. Cloudflare picks it up automatically.
