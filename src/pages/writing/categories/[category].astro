@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ArticleCard from "../../../components/ArticleCard.astro";
+import TopicNav from "../../../components/TopicNav.astro";
 import { getArticles, slugify } from "../../../lib/content";
 import type { GetStaticPaths } from "astro";
 
@@ -17,11 +18,11 @@ export const getStaticPaths = (async () => {
 
   return [...groups.entries()].map(([slug, group]) => ({
     params: { category: slug },
-    props: { name: group.name, posts: group.posts },
+    props: { name: group.name, posts: group.posts, slug },
   }));
 }) satisfies GetStaticPaths;
 
-const { name, posts } = Astro.props;
+const { name, posts, slug } = Astro.props;
 ---
 
 <BaseLayout
@@ -36,6 +37,8 @@ const { name, posts } = Astro.props;
         <p class="count">{posts.length} {posts.length === 1 ? "article" : "articles"}</p>
       </div>
     </header>
+
+    <TopicNav active={slug} />
 
     {posts.map((post) => <ArticleCard article={post} />)}
 

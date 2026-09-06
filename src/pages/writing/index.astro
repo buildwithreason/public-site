@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
+import TopicNav from "../../components/TopicNav.astro";
 import { getArticles } from "../../lib/content";
 
 const articles = await getArticles();
@@ -23,6 +24,8 @@ const count = articles.length;
       </div>
     </header>
 
+    <TopicNav active="all" />
+
     {count > 0 ? (
       <section aria-label="All articles">
         {articles.map((article) => <ArticleCard article={article} />)}
@@ -32,7 +35,7 @@ const count = articles.length;
     )}
 
     <p class="feed">
-      Browse <a href="/writing/tags">by topic</a>, or subscribe via <a href="/rss.xml">RSS</a>.
+      Subscribe via <a href="/rss.xml">RSS</a>, or see <a href="/writing/tags">every topic</a>.
     </p>
   </div>
 </BaseLayout>

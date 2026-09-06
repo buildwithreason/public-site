@@ -1,0 +1,159 @@
+---
+import { getCategories, getTags } from "../lib/content";
+
+interface Props {
+  /**
+   * Slug of the pillar or tag currently being viewed, or "all" on the full
+   * index. The matching chip is marked as the current page.
+   */
+  active?: string;
+  /** Cap on tag chips before the overflow link takes over. */
+  tagLimit?: number;
+}
+
+const { active = "all", tagLimit = 12 } = Astro.props;
+
+const categories = await getCategories();
+const tags = await getTags();
+const shown = tags.slice(0, tagLimit);
+const hidden = tags.length - shown.length;
+---
+
+<nav class="topics" aria-label="Browse writing by topic">
+  <div class="row">
+    <span class="label">Pillars</span>
+    <ul>
+      <li>
+        <a href="/writing" aria-current={active === "all" ? "page" : undefined}>
+          All<span class="count">{tags.length > 0 ? categories.reduce((n, c) => n + c.count, 0) : 0}</span>
+        </a>
+      </li>
+      {categories.map((c) => (
+        <li>
+          <a
+            href={`/writing/categories/${c.slug}`}
+            aria-current={active === c.slug ? "page" : undefined}
+          >
+            {c.name}<span class="count">{c.count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  {shown.length > 0 && (
+    <div class="row">
+      <span class="label">Tags</span>
+      <ul>
+        {shown.map((t) => (
+          <li>
+            <a
+              href={`/writing/tags/${t.slug}`}
+              aria-current={active === t.slug ? "page" : undefined}
+            >
+              {t.name}<span class="count">{t.count}</span>
+            </a>
+          </li>
+        ))}
+        {hidden > 0 && (
+          <li>
+            <a class="more" href="/writing/tags">{hidden} more <span aria-hidden="true">&rarr;</span></a>
+          </li>
+        )}
+      </ul>
+    </div>
+  )}
+</nav>
+
+<style>
+  .topics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-s) 0 var(--space-m);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  @media (min-width: 74rem) {
+    .row {
+      grid-template-columns: var(--rail) minmax(0, 1fr);
+      column-gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+
+  .label {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding-top: 0.3rem;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    padding: 0.28rem 0.6rem;
+    color: var(--ink-secondary);
+    background: var(--bg-surface);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+  }
+
+  /* Where you are now. */
+  a[aria-current="page"] {
+    color: var(--bg);
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  a[aria-current="page"] .count {
+    color: var(--bg);
+    opacity: 0.65;
+  }
+
+  a[aria-current="page"]:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  .more {
+    background: none;
+    border-style: dashed;
+  }
+</style>
