@@ -157,21 +157,20 @@ Article discussions are backed by **GitHub Discussions** via
 [Giscus](https://giscus.app). Threads live in this repo, so there is no third-party
 account, no database and no moderation dashboard to run — you moderate in GitHub.
 
-It is **off by default**. While it is off, no markup and no script reach the page at all.
+**Configured and live.** The repo is public, Discussions is enabled, the Giscus app is
+installed, and both ids are set in `src/config/site.ts`.
 
-### Turning it on
+Threads land in the **Announcements** category. That is deliberate: only maintainers can
+open threads there, and Giscus creates them on your behalf, so nobody can start unrelated
+discussions in it. Readers can still comment and react on any thread.
 
-1. **Make the repo public.** Giscus reads discussions through the public API; a private
-   repo cannot serve them.
-2. **Enable Discussions** — repo Settings → General → Features → tick *Discussions*.
-3. **Install the Giscus app** on the repo: <https://github.com/apps/giscus>
-4. Go to <https://giscus.app>, enter `kartikmavani/kartik-mavani-site`, and copy the
-   generated `data-repo-id` and `data-category-id`.
-5. Fill them into `comments` in `src/config/site.ts` and set `enabled: true`.
+No discussion exists for an article until its first comment — Giscus creates it on demand.
+Moderation happens in GitHub Discussions; there is no separate dashboard.
 
-Create a discussion category first if you want one dedicated to article comments.
-`Announcements` is the default here because only maintainers can open threads in it —
-Giscus still creates them on your behalf, which keeps stray discussions out.
+### If the ids ever need regenerating
+
+Go to <https://giscus.app>, enter `kartikmavani/kartik-mavani-site`, and copy the
+generated `data-repo-id` and `data-category-id` into `comments` in `src/config/site.ts`.
 
 ### How it behaves
 
@@ -256,5 +255,4 @@ public/
       plain text cards.
 - [ ] Review the four seeded articles and rewrite anything that does not sound like you.
 - [ ] Set up a domain email and add it to `siteConfig.email`.
-- [ ] Turn on comments once the repo is public: enable Discussions, install the Giscus
-      app, and paste the two ids into `siteConfig.comments`.
+- [x] Comments: repo public, Discussions enabled, Giscus app installed, ids configured.

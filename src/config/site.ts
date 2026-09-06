@@ -70,11 +70,7 @@ export const siteConfig = {
    * is not rendered and no third-party script is loaded.
    */
   comments: {
-    /**
-     * Rendering also requires both ids below to be non-empty, so this staying
-     * true while categoryId is blank is safe — the section simply does not
-     * render and no third-party script is loaded.
-     */
+    /** Master switch. Rendering also requires both ids below to be non-empty. */
     enabled: true,
 
     /** owner/name of the repo holding the discussions. */
@@ -82,17 +78,14 @@ export const siteConfig = {
     /** The repo's GitHub node id, verified against the public API. */
     repoId: "R_kgDOUP8K2w",
 
-    /** Discussion category. "Announcements" keeps threads author-created only. */
-    category: "Announcements",
     /**
-     * TODO — the last missing value. Discussion categories do not exist until
-     * Discussions is enabled on the repo, so this cannot be filled in yet:
-     *   1. Settings > General > Features > tick Discussions
-     *   2. Install https://github.com/apps/giscus on the repo
-     *   3. giscus.app > enter the repo > copy `data-category-id` here
-     * Looks like "DIC_kwDO...".
+     * "Announcements" is intentional: only maintainers can open threads in it,
+     * and Giscus creates them on your behalf. Readers can still comment on any
+     * thread — it just stops anyone opening unrelated discussions there.
      */
-    categoryId: "",
+    category: "Announcements",
+    /** Node id for the Announcements category on this repo. */
+    categoryId: "DIC_kwDOUP8K284DE_TW",
 
     /**
      * Giscus themes per site theme. Built-in names ("light", "dark",
