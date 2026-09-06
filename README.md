@@ -93,11 +93,11 @@ role, employer, social URLs, navigation. Nothing else hardcodes them.
 The brand name is **not final**. Change `brand` in that file and it updates the header,
 page titles, RSS channel, footer and Open Graph metadata everywhere at once.
 
-Two placeholders to replace before launch:
+Both are now settled:
 
-- `brand: "Built by Reason"` — availability not yet verified across domains and platforms.
-- `url: "https://kartikmavani.com"` — this drives canonical URLs, the sitemap, RSS links
-  and OG image URLs. It must match the real domain or those will all be wrong.
+- `brand: "Build with Reason"` — matches the registered domain.
+- `url: "https://buildwithreason.com"` — drives canonical URLs, the sitemap, RSS links
+  and OG image URLs.
 
 An empty string in `social` hides that link everywhere, so unused platforms can stay
 listed as reminders.
@@ -122,12 +122,15 @@ Connect to Git**.
 No environment variables and no server runtime — the output is static files. Every push
 to the default branch deploys; pull requests get preview URLs automatically.
 
-### Currently deployed on Cloudflare Workers
+### Deployment
 
-The live site is served by Workers static assets at
-`https://kartik-mavani-site.kartikmavani.workers.dev`, not Pages. Both serve the same
-`dist/` output and the build settings above are unchanged; Workers is simply the newer
-of the two products.
+The live site is **https://buildwithreason.com**, served by Cloudflare Workers static
+assets rather than Pages. Both serve the same `dist/` output and the build settings above
+are unchanged; Workers is simply the newer of the two products.
+
+The Workers subdomain still answers and serves identical content. Because canonical tags
+now name `buildwithreason.com`, those pages declare this domain as the original, which is
+what stops the two origins competing as duplicates in search results.
 
 **`siteConfig.url` must match whatever origin actually serves the site.** Canonical tags,
 `og:url`, the sitemap and every RSS link are built from it, so a stale value points search
@@ -142,9 +145,8 @@ Two things to know about the current deployment:
   redirect — but it can be tidied by setting `html_handling: "drop-trailing-slash"` in the
   Workers config, or by switching Astro to `trailingSlash: "always"`. Left alone for now
   rather than changing deployment behaviour blind.
-- **Indexing a temporary domain.** `*.workers.dev` is indexable. If a permanent domain is
-  coming soon, consider whether you want search engines building up an index against a URL
-  you intend to abandon.
+- **The Workers subdomain stays indexable.** Canonical tags handle the duplication, but
+  if you would rather it not be reachable at all, that is a Cloudflare-side setting.
 
 `public/_headers` sets immutable caching for hashed assets and fonts, plus baseline
 security headers. Cloudflare picks it up automatically.
@@ -282,9 +284,10 @@ and loads it in fragments, so it stays constant-cost as the archive grows.
 
 ## Before launch
 
-- [ ] Verify **Built by Reason** across domain, GitHub org, YouTube, X, LinkedIn, Reddit —
-      then set `brand` in `src/config/site.ts`.
-- [ ] Register the domain and update `siteConfig.url`.
+- [x] Domain registered (`buildwithreason.com`), brand set to **Build with Reason**, and
+      `siteConfig.url` pointed at it.
+- [ ] Claim the matching handles on GitHub org, YouTube, X, LinkedIn and Reddit before
+      announcing anywhere.
 - [ ] Fill in the remaining social URLs in `siteConfig.social`.
 - [ ] Complete `src/content/projects/agentic-news-engine.md` and set `draft: false`.
       **`/projects` is empty in production until this is done.**

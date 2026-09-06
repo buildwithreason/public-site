@@ -15,9 +15,9 @@ export const siteConfig = {
 
   /**
    * The publication. Secondary to the person.
-   * PLACEHOLDER — availability not yet verified across domains/platforms.
+   * Matches the registered domain, buildwithreason.com.
    */
-  brand: "Built by Reason",
+  brand: "Build with Reason",
 
   /** The four domains, rendered as an eyebrow line. */
   disciplines: ["Software", "Systems", "Cloud", "AI"],
@@ -32,13 +32,13 @@ export const siteConfig = {
   /**
    * Canonical origin, no trailing slash. Must match the origin that actually
    * serves the site — canonical tags, the sitemap, RSS links and Open Graph
-   * URLs are all built from it, so a stale value points search engines and
-   * social cards at a domain that does not resolve.
+   * URLs are all built from it.
    *
-   * Currently the Cloudflare Workers deployment. Change this in the same commit
-   * that points the real domain at the site.
+   * The Workers deployment still answers on *.workers.dev and serves identical
+   * content. Pointing canonical here means those pages declare this domain as
+   * the original, which is what stops the two origins competing as duplicates.
    */
-  url: "https://kartik-mavani-site.kartikmavani.workers.dev",
+  url: "https://buildwithreason.com",
 
   /** Locale used for <html lang> and date formatting. */
   locale: "en",
