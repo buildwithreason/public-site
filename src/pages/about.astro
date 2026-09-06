@@ -2,6 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SocialLinks from "../components/SocialLinks.astro";
 import { siteConfig } from "../config/site";
+import { getCategories, getArticles } from "../lib/content";
+
+const categories = await getCategories();
+const articleCount = (await getArticles()).length;
 ---
 
 <BaseLayout
@@ -17,7 +21,11 @@ import { siteConfig } from "../config/site";
       </div>
     </header>
 
-    <div class="prose">
+    <div class="railed about-shell">
+      <p class="eyebrow rail-label">Profile</p>
+
+      <div class="railed-body plain about-body">
+        <div class="prose">
       <p>
         I work on large-scale software systems, with a focus on backend engineering,
         distributed systems and cloud infrastructure. I currently work at AWS as a Staff
@@ -94,16 +102,34 @@ import { siteConfig } from "../config/site";
         are still true after the hype cycle finishes.
       </p>
 
-      <h2>Elsewhere</h2>
-    </div>
+        </div>
 
-    <div class="socials-block measure">
-      <SocialLinks />
-    </div>
+        <aside class="glance" aria-label="At a glance">
+          <dl>
+            <dt>Role</dt>
+            <dd>{siteConfig.role}</dd>
 
-    <p class="note measure">
-      Views here are my own and do not represent my employer.
-    </p>
+            <dt>Company</dt>
+            <dd>{siteConfig.company}</dd>
+
+            <dt>Writes about</dt>
+            <dd class="pillars">
+              {categories.map((c) => (
+                <a href={`/writing/categories/${c.slug}`}>{c.name}</a>
+              ))}
+            </dd>
+
+            <dt>Published</dt>
+            <dd><a href="/writing">{articleCount} articles</a></dd>
+
+            <dt>Elsewhere</dt>
+            <dd><SocialLinks variant="stack" /></dd>
+          </dl>
+
+          <p class="note">Views here are my own and do not represent my employer.</p>
+        </aside>
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
@@ -129,15 +155,71 @@ import { siteConfig } from "../config/site";
     color: var(--ink-muted);
   }
 
-  .socials-block {
-    margin-top: var(--space-s);
+  /* Prose keeps its reading measure; the panel takes the width that would
+     otherwise sit empty to its right. */
+  .about-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  @media (min-width: 62rem) {
+    .about-body {
+      grid-template-columns: minmax(0, var(--content-max)) minmax(0, 1fr);
+      column-gap: var(--space-xl);
+    }
+  }
+
+  .rail-label {
+    position: sticky;
+    top: var(--space-l);
+  }
+
+  .glance {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+  }
+
+  .glance dl {
+    margin: 0;
+    padding-top: 0.35rem;
+  }
+
+  .glance dt {
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .glance dd {
+    margin: 0.2rem 0 var(--space-s);
+    color: var(--ink-secondary);
+  }
+
+  .pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .glance a {
+    color: var(--ink-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .glance a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   .note {
-    margin-top: var(--space-xl);
+    margin-top: var(--space-m);
     padding-top: var(--space-s);
     border-top: 1px solid var(--rule);
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     color: var(--ink-faint);
   }
 </style>

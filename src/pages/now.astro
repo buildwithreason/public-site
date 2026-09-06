@@ -20,7 +20,7 @@ const updated = formatDate(new Date(now.updated));
       </div>
     </header>
 
-    <div class="sections measure">
+    <div class="sections">
       {now.sections.map((section) => (
         <section>
           <h2>{section.heading}</h2>
@@ -69,8 +69,20 @@ const updated = formatDate(new Date(now.updated));
     color: var(--ink-faint);
   }
 
-  .sections section + section {
-    margin-top: var(--space-l);
+  /* Three short lists stacked in one 39rem column left most of the page
+     empty. As a column grid they are all visible at once. */
+  .sections {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-l) var(--space-xl);
+    align-items: start;
+    max-width: none;
+  }
+
+  @media (min-width: 62rem) {
+    .sections {
+      grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    }
   }
 
   h2 {

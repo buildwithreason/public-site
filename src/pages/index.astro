@@ -66,8 +66,7 @@ const currently = now.sections[0];
     margin-top: var(--space-2xl);
   }
 
-  .about p,
-  .currently ul {
+  .about p {
     max-width: 46rem;
   }
 
@@ -94,14 +93,17 @@ const currently = now.sections[0];
   .currently ul {
     margin-top: var(--space-s);
     padding-left: 1.1rem;
+    /* Short items, same as /now — they read better across than stacked. */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 0.5rem var(--space-l);
+    max-width: none;
     font-family: var(--font-serif);
     line-height: 1.65;
     color: var(--ink-secondary);
   }
 
-  .currently li + li {
-    margin-top: 0.5rem;
-  }
+
 
   .currently li::marker {
     color: var(--ink-faint);

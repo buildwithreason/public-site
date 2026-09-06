@@ -21,7 +21,7 @@ const categories = await getCategories();
       </div>
     </header>
 
-    <section class="block measure">
+    <section class="block">
       <h2 class="eyebrow">Pillars</h2>
       <ul class="list">
         {categories.map((c) => (
@@ -35,7 +35,7 @@ const categories = await getCategories();
       </ul>
     </section>
 
-    <section class="block measure">
+    <section class="block">
       <h2 class="eyebrow">Tags</h2>
       {tags.length > 0 ? (
         <ul class="list">
@@ -81,10 +81,15 @@ const categories = await getCategories();
     margin-top: var(--space-l);
   }
 
+  /* Rows are just a name and a count, so they column up cleanly rather than
+     running down one narrow strip. */
   .list {
     list-style: none;
     padding: 0;
     margin: var(--space-s) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    column-gap: var(--space-l);
   }
 
   .list a {
