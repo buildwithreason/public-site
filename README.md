@@ -1,7 +1,8 @@
-# kartik-mavani-site
+# public-site
 
 Personal site and technical publication for Kartik Mavani — Staff Software Engineer.
-Astro, static output, deployed to Cloudflare Pages.
+Astro, static output, deployed to Cloudflare Workers at
+**[buildwithreason.com](https://buildwithreason.com)**.
 
 ```bash
 npm install
@@ -169,9 +170,22 @@ discussions in it. Readers can still comment and react on any thread.
 No discussion exists for an article until its first comment — Giscus creates it on demand.
 Moderation happens in GitHub Discussions; there is no separate dashboard.
 
+### If the repo ever moves
+
+GitHub App installations belong to an **account or org, not to a repo**, so they do not
+travel with a transfer. Moving this repo to another owner means installing
+<https://github.com/apps/giscus> on that owner before comments work again — until then
+Giscus answers `giscus is not installed on this repository`.
+
+A transfer or rename preserves the repository object itself, so `repoId` and `categoryId`
+should stay valid and discussions come along with it. Worth confirming rather than
+assuming: the check is that the configured repo, category and term return
+`Discussion not found` (correct — that thread has no comments yet) rather than the
+not-installed error.
+
 ### If the ids ever need regenerating
 
-Go to <https://giscus.app>, enter `kartikmavani/kartik-mavani-site`, and copy the
+Go to <https://giscus.app>, enter `buildwithreason/public-site`, and copy the
 generated `data-repo-id` and `data-category-id` into `comments` in `src/config/site.ts`.
 
 ### How it behaves

@@ -74,7 +74,7 @@ export const siteConfig = {
     enabled: true,
 
     /** owner/name of the repo holding the discussions. */
-    repo: "kartikmavani/kartik-mavani-site",
+    repo: "buildwithreason/public-site",
     /** The repo's GitHub node id, verified against the public API. */
     repoId: "R_kgDOUP8K2w",
 
