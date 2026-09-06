@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // Without this file, `wrangler deploy` decides the project is unconfigured,
+  // runs `astro add cloudflare` to install the @astrojs/cloudflare adapter, and
+  // rebuilds. That adapter targets the Workers runtime, which cannot load a
+  // native .node binary — so the rebuild dies on @resvg/resvg-js while
+  // generating the social cards, and the deploy fails.
+  //
+  // The first build already succeeded and produced everything. This site is
+  // fully static: `output: "static"` prerenders every route at build time, so
+  // there is no server code to adapt and no adapter to add. Declaring the
+  // assets deployment here keeps wrangler out of auto-config entirely.
+
+  "name": "public-site",
+  "compatibility_date": "2026-09-06",
+
+  "assets": {
+    "directory": "./dist",
+
+    // Serve /404.html for unmatched paths rather than a bare Workers error.
+    "not_found_handling": "404-page",
+
+    // Astro emits slash-free canonical URLs, but Cloudflare's default
+    // ("auto-trailing-slash") redirects /writing/foo -> /writing/foo/, so every
+    // canonical pointed at a URL that 301s. This aligns the two.
+    "html_handling": "drop-trailing-slash"
+  }
+}
