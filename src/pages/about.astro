@@ -9,10 +9,12 @@ import { siteConfig } from "../config/site";
   description={`${siteConfig.name} is a ${siteConfig.role} working on large-scale software systems — backend engineering, distributed systems, cloud and AI.`}
 >
   <div class="wrap">
-    <header class="page-header measure">
+    <header class="page-header railed">
       <p class="eyebrow">About</p>
-      <h1>{siteConfig.name}</h1>
-      <p class="standfirst">{siteConfig.role} at {siteConfig.company}</p>
+      <div class="railed-body plain">
+        <h1>{siteConfig.name}</h1>
+        <p class="standfirst">{siteConfig.role} at {siteConfig.company}</p>
+      </div>
     </header>
 
     <div class="prose">

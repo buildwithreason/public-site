@@ -33,7 +33,7 @@ const href = `/writing/${article.id}`;
 <style>
   .entry {
     display: grid;
-    grid-template-columns: 11rem 1fr;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
     gap: var(--space-m);
     padding-block: var(--space-m);
     border-bottom: 1px solid var(--rule);
@@ -92,7 +92,7 @@ const href = `/writing/${article.id}`;
 
   .body p {
     margin-top: 0.5rem;
-    max-width: 42rem;
+    max-width: 46rem;
     color: var(--ink-muted);
     font-size: 0.92rem;
     line-height: 1.6;

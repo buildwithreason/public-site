@@ -12,13 +12,15 @@ const count = articles.length;
   description="Essays on software engineering, distributed systems, cloud architecture and AI — and the reasoning behind the decisions."
 >
   <div class="wrap">
-    <header class="page-header measure">
+    <header class="page-header railed">
       <p class="eyebrow">Writing</p>
-      <h1>Essays on how modern software actually works</h1>
-      <p class="standfirst">
-        Long-form pieces on software engineering, distributed systems, cloud architecture and
-        AI. Roughly one substantial article a week.
-      </p>
+      <div class="railed-body plain">
+        <h1>Essays on how modern software actually works</h1>
+        <p class="standfirst">
+          Long-form pieces on software engineering, distributed systems, cloud architecture and
+          AI. Roughly one substantial article a week.
+        </p>
+      </div>
     </header>
 
     {count > 0 ? (
@@ -56,6 +58,7 @@ const count = articles.length;
     font-family: var(--font-serif);
     font-size: var(--step-0);
     line-height: 1.6;
+    max-width: 46rem;
     color: var(--ink-muted);
     text-wrap: pretty;
   }

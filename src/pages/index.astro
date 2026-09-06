@@ -17,15 +17,17 @@ const currently = now.sections[0];
   <Hero />
 
   {articles.length > 0 && (
-    <section class="wrap block">
+    <section class="wrap railed block">
       <SectionHeading title="Featured writing" href="/writing" linkLabel="All writing" />
-      {articles.map((article) => <ArticleCard article={article} />)}
+      <div class="railed-body">
+        {articles.map((article) => <ArticleCard article={article} />)}
+      </div>
     </section>
   )}
 
-  <section class="wrap block">
+  <section class="wrap railed block">
     <SectionHeading title="About" href="/about" linkLabel="More about me" />
-    <div class="about measure">
+    <div class="railed-body about">
       <p>
         I write about software engineering, distributed systems, cloud architecture and AI —
         with a particular interest in the reasoning behind technical decisions and what
@@ -40,15 +42,17 @@ const currently = now.sections[0];
   </section>
 
   {projects.length > 0 && (
-    <section class="wrap block">
+    <section class="wrap railed block">
       <SectionHeading title="Selected projects" href="/projects" linkLabel="All projects" />
-      {projects.map((project) => <ProjectCard project={project} />)}
+      <div class="railed-body">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
     </section>
   )}
 
-  <section class="wrap block">
+  <section class="wrap railed block">
     <SectionHeading title="Currently" href="/now" linkLabel="What I'm doing now" />
-    <div class="currently measure">
+    <div class="railed-body currently">
       <p class="lede">{currently.heading}</p>
       <ul>
         {currently.items.map((item) => <li>{item}</li>)}
@@ -60,6 +64,11 @@ const currently = now.sections[0];
 <style>
   .block {
     margin-top: var(--space-2xl);
+  }
+
+  .about p,
+  .currently ul {
+    max-width: 46rem;
   }
 
   .about p {

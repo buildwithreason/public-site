@@ -1,7 +1,7 @@
 ---
 interface Props {
   title: string;
-  /** Optional link rendered on the right, e.g. "All writing →". */
+  /** Optional link shown under the label, e.g. "All writing →". */
   href?: string;
   linkLabel?: string;
   as?: "h2" | "h3";
@@ -9,20 +9,20 @@ interface Props {
 const { title, href, linkLabel = "View all", as: Heading = "h2" }: Props = Astro.props;
 ---
 
-<div class="section-heading">
+<div class="section-label">
   <Heading class="eyebrow">{title}</Heading>
   {href && <a href={href}>{linkLabel} <span aria-hidden="true">&rarr;</span></a>}
 </div>
 
 <style>
-  .section-heading {
+  .section-label {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: var(--space-s);
+    gap: var(--space-xs);
     padding-bottom: var(--space-xs);
     border-bottom: 1px solid var(--rule-strong);
-    margin-bottom: var(--space-m);
   }
 
   a {
@@ -34,5 +34,22 @@ const { title, href, linkLabel = "View all", as: Heading = "h2" }: Props = Astro
 
   a:hover {
     color: var(--accent);
+  }
+
+  /* In the rail the label stacks and loses its rule — the content column
+     carries the divider instead, so the two align across the gap. */
+  @media (min-width: 74rem) {
+    .section-label {
+      display: block;
+      padding-bottom: 0;
+      border-bottom: 0;
+      position: sticky;
+      top: var(--space-l);
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
   }
 </style>

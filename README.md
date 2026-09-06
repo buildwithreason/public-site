@@ -261,6 +261,13 @@ and loads it in fragments, so it stays constant-cost as the archive grows.
 - **Colour.** Warm off-white ground, charcoal ink, one restrained rust accent used only
   for links and marks. Light and dark are both first-class; dark follows the OS by default
   and the toggle overrides it.
+- **Layout — rails, not wider text.** The container is 84rem, but the reading measure is
+  pinned at 39rem and never grows: long lines are the fastest way to ruin long-form
+  reading. Wide screens are filled by putting content in the margins instead. `--rail`
+  (14rem) is used by the article metadata rail, the contents rail, section labels and the
+  date column on cards, so a single vertical alignment line runs down the whole site.
+  Article pages go three columns (metadata | text | contents) above 1440px, two above
+  1184px, and one below, dropping a rail at each step.
 - **JavaScript.** No framework, no hydration, no client-side routing. Every page carries
   ~2.7KB uncompressed (theme restore, theme toggle, search palette). Article pages carry
   ~8.1KB, the extra being the contents scroll spy, reading progress, copy buttons, heading

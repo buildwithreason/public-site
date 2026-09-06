@@ -82,6 +82,10 @@
 
   dialog {
     width: min(38rem, calc(100vw - 2rem));
+    /* The global `* { margin: 0 }` reset overrides the UA stylesheet's
+       `dialog { margin: auto }`, which is what centres a modal against its
+       `inset: 0`. Without this the dialog pins to the left edge. */
+    margin-inline: auto;
     margin-top: 12vh;
     padding: 0;
     background: var(--bg);

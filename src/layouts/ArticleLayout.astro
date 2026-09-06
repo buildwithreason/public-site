@@ -69,6 +69,43 @@ const jsonLd = {
   <div class="progress" aria-hidden="true"><span data-progress></span></div>
 
   <div class="wrap article-shell">
+    {/* Left rail on very wide screens. Duplicates the byline and footer
+        metadata, but exactly one of the two is ever displayed. */}
+    <aside class="meta-rail">
+      <dl>
+        <dt>Published</dt>
+        <dd><time datetime={isoDate(date)}>{formatDate(date)}</time></dd>
+
+        {showUpdated && (
+          <>
+            <dt>Updated</dt>
+            <dd>{formatDate(updated!)}</dd>
+          </>
+        )}
+
+        <dt>Reading time</dt>
+        <dd>{readingTime(article.body)}</dd>
+
+        <dt>Filed under</dt>
+        <dd>
+          <a href={`/writing/categories/${slugify(category)}`}>{category}</a>
+        </dd>
+
+        {tags.length > 0 && (
+          <>
+            <dt>Tags</dt>
+            <dd class="rail-tags">
+              {tags.map((t) => (
+                <a href={`/writing/tags/${slugify(t)}`}>{t}</a>
+              ))}
+            </dd>
+          </>
+        )}
+      </dl>
+
+      <button type="button" data-copy-link class="rail-copy">Copy link</button>
+    </aside>
+
     <article class="column">
       <header class="article-header">
         <p class="eyebrow">
@@ -129,7 +166,7 @@ const jsonLd = {
     </article>
 
     {/* Wide screens get a sticky rail alongside the text. */}
-    <aside class="rail">
+    <aside class="rail toc-rail">
       <div class="rail-inner">
         <TableOfContents headings={headings} />
       </div>
@@ -156,18 +193,24 @@ const jsonLd = {
     transition: width 0.08s linear;
   }
 
-  /* Text column plus rail. The article stays at its reading measure; the rail
-     uses the space a centred column would otherwise waste. */
+  /* Three zones on a wide screen: metadata, text, contents. The text column
+     never grows past its reading measure — the extra width goes to the rails,
+     which is the whole point. Rails drop away one at a time as space runs out.
+
+       >= 90rem  meta | text | contents
+       >= 74rem         text | contents
+       <  74rem         text  (contents inline above it, meta in the footer)
+  */
   .article-shell {
-    --page-max: 68rem;
     display: grid;
-    grid-template-columns: minmax(0, 46rem) minmax(0, 15rem);
+    grid-template-columns: minmax(0, 46rem);
     justify-content: center;
-    gap: var(--space-2xl);
     align-items: start;
+    column-gap: var(--space-2xl);
   }
 
-  .rail {
+  .rail,
+  .meta-rail {
     position: sticky;
     top: var(--space-l);
     padding-top: calc(var(--space-xl) + 0.5rem);
@@ -175,16 +218,88 @@ const jsonLd = {
     overflow-y: auto;
   }
 
-  .toc-inline { display: none; }
+  .meta-rail,
+  .toc-rail {
+    display: none;
+  }
 
-  @media (max-width: 74rem) {
+  .toc-inline { display: block; }
+
+  @media (min-width: 74rem) {
     .article-shell {
-      grid-template-columns: minmax(0, 1fr);
-      justify-content: start;
-      max-width: 46rem;
+      grid-template-columns: minmax(0, 46rem) minmax(0, 15rem);
     }
-    .rail { display: none; }
-    .toc-inline { display: block; }
+    .toc-rail { display: block; }
+    .toc-inline { display: none; }
+  }
+
+  @media (min-width: 90rem) {
+    .article-shell {
+      grid-template-columns: minmax(0, 14rem) minmax(0, 46rem) minmax(0, 15rem);
+      justify-content: space-between;
+      column-gap: var(--space-xl);
+    }
+    .meta-rail { display: block; }
+
+    /* The rail now carries this information; don't say it twice. */
+    .column .byline,
+    .column .updated,
+    .column .tags,
+    .column .share button {
+      display: none;
+    }
+  }
+
+  /* Metadata rail */
+  .meta-rail dl {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+  }
+
+  .meta-rail dt {
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .meta-rail dd {
+    margin: 0.15rem 0 var(--space-s);
+    color: var(--ink-secondary);
+  }
+
+  .meta-rail a {
+    color: var(--ink-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .meta-rail a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .rail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.6rem;
+  }
+
+  .rail-copy {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--rule-strong);
+    color: var(--ink-muted);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+
+  .rail-copy:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   .article-header {
@@ -386,16 +501,19 @@ const jsonLd = {
   }
 
   // ---- Copy link -----------------------------------------------------------
-  const copyLink = document.querySelector<HTMLButtonElement>("[data-copy-link]");
-  copyLink?.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(location.href.split("#")[0]!);
-      copyLink.textContent = "Link copied";
-    } catch {
-      copyLink.textContent = "Copy failed";
-    }
-    setTimeout(() => (copyLink.textContent = "Copy link"), 1600);
-  });
+  // There are two: one in the metadata rail, one in the article footer. Only
+  // one is visible at any width, but both need wiring.
+  for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-copy-link]")) {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(location.href.split("#")[0]!);
+        btn.textContent = "Link copied";
+      } catch {
+        btn.textContent = "Copy failed";
+      }
+      setTimeout(() => (btn.textContent = "Copy link"), 1600);
+    });
+  }
 
   // ---- Contents scroll spy -------------------------------------------------
   const links = document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");

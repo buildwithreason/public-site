@@ -135,9 +135,15 @@
   --space-2xl: clamp(4.5rem, 3rem + 6vw, 7.5rem);
 
   /* Layout */
-  --page-max: 68rem;
-  --content-max: 39rem; /* ~68 characters at the body size — the reading measure */
+  --page-max: 84rem;
+  /* The reading measure, ~68 characters. This does NOT grow with the viewport:
+     wide screens are filled with rails beside the text, never longer lines. */
+  --content-max: 39rem;
   --gutter: clamp(1.25rem, 0.8rem + 2.2vw, 2.5rem);
+  /* Width of the label/metadata rail. One value, used by the article rails,
+     the section labels and the date column on cards, so everything on the
+     site shares a single vertical alignment line. */
+  --rail: 14rem;
 
   --radius: 3px;
 }
@@ -305,6 +311,41 @@ hr {
 .skip-link:focus {
   left: var(--gutter);
   top: 0.5rem;
+}
+
+/* Rail + content. The site's core layout: a narrow left column for labels and
+   metadata, a main column for content. Collapses to one column when there is
+   not room for both, at which point the rail simply sits above. */
+.railed {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-s);
+  align-items: start;
+}
+
+@media (min-width: 74rem) {
+  .railed {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    column-gap: var(--space-xl);
+  }
+}
+
+/* The content half of a .railed block, with the section rule above it. */
+.railed > .railed-body {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: var(--space-m);
+}
+
+@media (max-width: 74rem) {
+  .railed > .railed-body {
+    border-top: 0;
+  }
+}
+
+/* Page headers use the rail for alignment only, not as a divided section. */
+.railed > .railed-body.plain {
+  border-top: 0;
+  padding-top: 0;
 }
 
 /* Small-caps style label used above sections and in metadata rows. */

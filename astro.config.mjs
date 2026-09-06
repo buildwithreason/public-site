@@ -14,6 +14,10 @@ export default defineConfig({
 
   integrations: [sitemap()],
 
+  // The floating dev toolbar overlays the bottom of every page while running
+  // `astro dev`. It is never part of a production build either way.
+  devToolbar: { enabled: false },
+
   markdown: {
     shikiConfig: {
       // Dual themes so code blocks follow the site's light/dark tokens
