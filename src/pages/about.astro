@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SocialLinks from "../components/SocialLinks.astro";
+import { siteConfig } from "../config/site";
+---
+
+<BaseLayout
+  title="About"
+  description={`${siteConfig.name} is a ${siteConfig.role} working on large-scale software systems — backend engineering, distributed systems, cloud and AI.`}
+>
+  <div class="wrap">
+    <header class="page-header measure">
+      <p class="eyebrow">About</p>
+      <h1>{siteConfig.name}</h1>
+      <p class="standfirst">{siteConfig.role} at {siteConfig.company}</p>
+    </header>
+
+    <div class="prose">
+      <p>
+        I work on large-scale software systems, with a focus on backend engineering,
+        distributed systems and cloud infrastructure. I currently work at AWS as a Staff
+        Software Engineer.
+      </p>
+
+      <p>
+        My interests span software architecture, infrastructure, AI engineering, and the
+        changing relationship between software engineers and the tools they build with. The
+        thread running through all of it is a fairly narrow obsession: understanding what
+        actually happens beneath the abstractions we use every day.
+      </p>
+
+      <h2>Why this site exists</h2>
+
+      <p>
+        There is no shortage of material explaining how to use a technology. There is much
+        less explaining why it was built the way it was — the constraints the designers were
+        working under, the failure modes that shaped the interface, the trade-offs that were
+        genuinely contested rather than obvious in hindsight.
+      </p>
+
+      <p>
+        That reasoning is the part that transfers. A tutorial on a message broker is obsolete
+        when the API changes. An understanding of why ordering guarantees are expensive, and
+        what a system has to give up to provide them, is still useful ten years and three
+        technologies later.
+      </p>
+
+      <p>
+        So this is where I write that down: what I am learning, what I am building, and what I
+        have changed my mind about. It is a working notebook more than a portfolio.
+      </p>
+
+      <h2>What I write about</h2>
+
+      <p>
+        Six recurring threads, in rough order of how often they show up:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Distributed systems</strong> — ordering, replication, consistency,
+          idempotency, coordination, and the failure modes that only appear under load.
+        </li>
+        <li>
+          <strong>Software engineering</strong> — backend design, concurrency, performance,
+          reliability, observability and the craft of building things that stay maintainable.
+        </li>
+        <li>
+          <strong>Cloud and infrastructure</strong> — architecture, storage models, networking
+          and the cost-and-reliability trade-offs that come with them. AWS shows up often
+          because that is what I know best, but the ideas are meant to hold elsewhere.
+        </li>
+        <li>
+          <strong>AI engineering</strong> — agents, retrieval, tool calling, evaluation and
+          memory, treated as architecture problems rather than prompt problems.
+        </li>
+        <li>
+          <strong>Engineering thinking</strong> — how experienced engineers reason about
+          trade-offs, complexity and technical decisions.
+        </li>
+        <li>
+          <strong>The future of software engineering</strong> — how the role is changing as AI
+          takes on more of the work, and which parts of it are not going anywhere.
+        </li>
+      </ul>
+
+      <h2>A note on what you will not find here</h2>
+
+      <p>
+        No news aggregation, no framework of the week, and no claims that a technology has
+        made another technology obsolete. I am more interested in the parts of this field that
+        are still true after the hype cycle finishes.
+      </p>
+
+      <h2>Elsewhere</h2>
+    </div>
+
+    <div class="socials-block measure">
+      <SocialLinks />
+    </div>
+
+    <p class="note measure">
+      Views here are my own and do not represent my employer.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-m);
+    margin-bottom: var(--space-l);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  h1 {
+    margin-top: var(--space-xs);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .standfirst {
+    margin-top: 0.4rem;
+    font-size: var(--step-0);
+    color: var(--ink-muted);
+  }
+
+  .socials-block {
+    margin-top: var(--space-s);
+  }
+
+  .note {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--rule);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+</style>

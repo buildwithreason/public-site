@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found" noindex={true}>
+  <div class="wrap notfound">
+    <p class="eyebrow">404</p>
+    <h1>This page does not exist</h1>
+    <p class="body">
+      The link may be out of date, or the page may have moved. The
+      <a href="/writing">writing index</a> is the best place to start.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: clamp(4rem, 12vh, 8rem);
+    max-width: var(--content-max);
+  }
+
+  h1 {
+    margin-top: var(--space-xs);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .body {
+    margin-top: var(--space-s);
+    font-family: var(--font-serif);
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  .body a {
+    color: var(--accent);
+  }
+</style>

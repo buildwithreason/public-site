@@ -1,0 +1,100 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { getFeaturedArticles, getProjects } from "../lib/content";
+import { siteConfig } from "../config/site";
+import { now } from "../config/now";
+
+const articles = await getFeaturedArticles(3);
+const projects = (await getProjects()).slice(0, 3);
+const currently = now.sections[0];
+---
+
+<BaseLayout title={siteConfig.name} description={siteConfig.description}>
+  <Hero />
+
+  {articles.length > 0 && (
+    <section class="wrap block">
+      <SectionHeading title="Featured writing" href="/writing" linkLabel="All writing" />
+      {articles.map((article) => <ArticleCard article={article} />)}
+    </section>
+  )}
+
+  <section class="wrap block">
+    <SectionHeading title="About" href="/about" linkLabel="More about me" />
+    <div class="about measure">
+      <p>
+        I write about software engineering, distributed systems, cloud architecture and AI —
+        with a particular interest in the reasoning behind technical decisions and what
+        happens beneath the abstractions.
+      </p>
+      <p>
+        Most engineering content explains how to use a thing. I am more interested in why it
+        was built that way: the trade-offs that were made, the failure modes that shaped the
+        design, and what actually happens when the abstraction stops holding.
+      </p>
+    </div>
+  </section>
+
+  {projects.length > 0 && (
+    <section class="wrap block">
+      <SectionHeading title="Selected projects" href="/projects" linkLabel="All projects" />
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </section>
+  )}
+
+  <section class="wrap block">
+    <SectionHeading title="Currently" href="/now" linkLabel="What I'm doing now" />
+    <div class="currently measure">
+      <p class="lede">{currently.heading}</p>
+      <ul>
+        {currently.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block {
+    margin-top: var(--space-2xl);
+  }
+
+  .about p {
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.7;
+    color: var(--ink-secondary);
+    text-wrap: pretty;
+  }
+
+  .about p + p {
+    margin-top: var(--space-s);
+  }
+
+  .lede {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .currently ul {
+    margin-top: var(--space-s);
+    padding-left: 1.1rem;
+    font-family: var(--font-serif);
+    line-height: 1.65;
+    color: var(--ink-secondary);
+  }
+
+  .currently li + li {
+    margin-top: 0.5rem;
+  }
+
+  .currently li::marker {
+    color: var(--ink-faint);
+  }
+</style>

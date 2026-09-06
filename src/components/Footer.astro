@@ -1,0 +1,114 @@
+---
+import { siteConfig } from "../config/site";
+import SocialLinks from "./SocialLinks.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div class="identity">
+      <p class="brand">{siteConfig.brand}</p>
+      <p class="disciplines">{siteConfig.disciplines.join(" · ")}</p>
+      <p class="by">by {siteConfig.name}, {siteConfig.role} at {siteConfig.company}</p>
+    </div>
+
+    <div class="col">
+      <p class="eyebrow">Site</p>
+      <ul>
+        {siteConfig.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <p class="eyebrow">Elsewhere</p>
+      <SocialLinks variant="stack" />
+    </div>
+  </div>
+
+  <div class="wrap baseline">
+    <p>© {year} {siteConfig.name}</p>
+    <p>Built with Astro. Hosted on Cloudflare Pages.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-m);
+    font-size: 0.875rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-l) var(--space-m);
+    align-items: start;
+  }
+
+  .brand {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .disciplines {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+
+  .by {
+    margin-top: var(--space-xs);
+    max-width: 24rem;
+    color: var(--ink-muted);
+  }
+
+  .col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.7rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .col :global(.socials) {
+    margin-top: 0.7rem;
+  }
+
+  .col a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .col a:hover {
+    color: var(--accent);
+  }
+
+  .baseline {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    margin-top: var(--space-l);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--rule);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 42rem) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .identity {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

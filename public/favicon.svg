@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <style>
+    .ground { fill: #fbfaf8; }
+    .layer  { stroke: #17181b; }
+    .probe  { stroke: #8c3f1d; }
+    @media (prefers-color-scheme: dark) {
+      .ground { fill: #121316; }
+      .layer  { stroke: #e9e7e3; }
+      .probe  { stroke: #d98a5f; }
+    }
+  </style>
+  <rect class="ground" width="32" height="32" rx="5"/>
+  <g fill="none" stroke-width="2" stroke-linecap="round">
+    <!-- Three layers of abstraction... -->
+    <path class="layer" d="M7 11h18" opacity="0.35"/>
+    <path class="layer" d="M7 16h18" opacity="0.6"/>
+    <path class="layer" d="M7 21h18" opacity="0.9"/>
+    <!-- ...and the line that goes through them. -->
+    <path class="probe" d="M16 6v20"/>
+  </g>
+</svg>

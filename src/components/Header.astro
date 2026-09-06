@@ -1,0 +1,126 @@
+---
+import { siteConfig } from "../config/site";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isCurrent = (href: string) => path === href || path.startsWith(href + "/");
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark" href="/">
+      <span class="brand">{siteConfig.brand}</span>
+      <span class="byline">{siteConfig.name}</span>
+    </a>
+
+    <nav aria-label="Primary">
+      <ul>
+        {siteConfig.nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    min-height: 4rem;
+    padding-block: 0.75rem;
+  }
+
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin-right: auto;
+    text-decoration: none;
+    line-height: 1.15;
+  }
+
+  .brand {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  /* The publication is the chrome; the person is the byline under it. */
+  .byline {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .wordmark:hover .brand {
+    color: var(--accent);
+  }
+
+  nav ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.9rem, 2.4vw, 1.75rem);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  nav a {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding-block: 0.4rem;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease;
+  }
+
+  nav a:hover {
+    color: var(--ink);
+  }
+
+  nav a[aria-current="page"] {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Four short items fit a 320px viewport, so the nav never needs to collapse
+     behind a menu button — one less thing to tap and one less script. */
+  @media (max-width: 34rem) {
+    .bar {
+      column-gap: var(--space-s);
+      flex-wrap: wrap;
+      min-height: 0;
+    }
+    .wordmark .byline {
+      display: none;
+    }
+    nav {
+      order: 3;
+      width: 100%;
+      border-top: 1px solid var(--rule);
+      padding-top: 0.6rem;
+      margin-top: 0.15rem;
+    }
+    nav ul {
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    nav a {
+      font-size: 0.83rem;
+    }
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import { siteConfig } from "../config/site";
+import SocialLinks from "./SocialLinks.astro";
+---
+
+<section class="hero">
+  <div class="wrap">
+    <p class="name">{siteConfig.name}</p>
+    <p class="role">{siteConfig.role} at {siteConfig.company}</p>
+
+    <p class="disciplines">{siteConfig.disciplines.join(" · ")}</p>
+
+    <h1>{siteConfig.tagline}</h1>
+
+    <div class="actions">
+      <a class="primary" href="/writing">Read the writing</a>
+      <a class="secondary" href="/projects">Explore projects</a>
+    </div>
+
+    <SocialLinks />
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(3.5rem, 2rem + 7vw, 7rem);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .name {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .role {
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+  }
+
+  .disciplines {
+    margin-top: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* The tagline is the H1 — it is the actual claim the site makes. */
+  h1 {
+    margin-top: var(--space-s);
+    max-width: 20ch;
+    font-family: var(--font-serif);
+    font-size: var(--step-4);
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: var(--space-l);
+    margin-bottom: var(--space-m);
+  }
+
+  .actions a {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule-strong);
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .secondary {
+    color: var(--ink-secondary);
+  }
+
+  .secondary:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  @media (max-width: 34rem) {
+    h1 {
+      max-width: none;
+    }
+  }
+</style>

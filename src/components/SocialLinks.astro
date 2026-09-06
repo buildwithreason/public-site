@@ -1,0 +1,57 @@
+---
+import { activeSocials, siteConfig } from "../config/site";
+
+interface Props {
+  /** "inline" for the hero row, "stack" for the footer column. */
+  variant?: "inline" | "stack";
+}
+const { variant = "inline" } = Astro.props;
+const showEmail = Boolean(siteConfig.email);
+---
+
+{(activeSocials.length > 0 || showEmail) && (
+  <ul class:list={["socials", variant]}>
+    {activeSocials.map(([label, href]) => (
+      <li>
+        <a href={href} rel="me noopener" target="_blank">{label}</a>
+      </li>
+    ))}
+    {showEmail && (
+      <li><a href={`mailto:${siteConfig.email}`}>Email</a></li>
+    )}
+  </ul>
+)}
+
+<style>
+  .socials {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .socials.inline {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.1rem;
+  }
+
+  .socials.stack {
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+</style>

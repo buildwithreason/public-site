@@ -1,0 +1,118 @@
+---
+import { formatDate, isoDate, readingTime, type Article } from "../lib/content";
+
+interface Props {
+  article: Article;
+  /** "index" shows the date column; "compact" drops it for tight homepage rows. */
+  variant?: "index" | "compact";
+}
+
+const { article, variant = "index" } = Astro.props;
+const { title, description, date, category, draft } = article.data;
+const href = `/writing/${article.id}`;
+---
+
+<article class:list={["entry", variant]}>
+  <div class="meta">
+    <time datetime={isoDate(date)}>{formatDate(date)}</time>
+    <span class="category">{category}</span>
+  </div>
+
+  <div class="body">
+    <h3>
+      <a href={href}>
+        {title}
+        {draft && <span class="draft">Draft</span>}
+      </a>
+    </h3>
+    <p>{description}</p>
+    <p class="reading">{readingTime(article.body)}</p>
+  </div>
+</article>
+
+<style>
+  .entry {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-m);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    padding-top: 0.35rem;
+  }
+
+  .category {
+    color: var(--ink-muted);
+  }
+
+  h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  h3 a:hover {
+    color: var(--accent);
+  }
+
+  .draft {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 0.05rem 0.3rem;
+  }
+
+  .body p {
+    margin-top: 0.5rem;
+    max-width: 42rem;
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .reading {
+    margin-top: 0.5rem;
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+  }
+
+  .compact .meta {
+    flex-direction: row;
+    gap: 0.6rem;
+  }
+
+  @media (max-width: 46rem) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .meta {
+      flex-direction: row;
+      gap: 0.6rem;
+      padding-top: 0;
+    }
+  }
+</style>
