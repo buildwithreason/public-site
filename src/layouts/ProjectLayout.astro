@@ -2,6 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import Tag from "../components/Tag.astro";
 import TableOfContents from "../components/TableOfContents.astro";
+import ReadingBehaviour from "../components/ReadingBehaviour.astro";
 import type { Project } from "../lib/content";
 import type { MarkdownHeading } from "astro";
 
@@ -15,6 +16,8 @@ const { title, description, year, status, tech, repo, demo, draft } = project.da
 ---
 
 <BaseLayout title={title} description={description} noindex={draft}>
+  <ReadingBehaviour />
+
   <div class="wrap project-shell">
     <aside class="meta-rail">
       <dl>
@@ -69,12 +72,15 @@ const { title, description, year, status, tech, repo, demo, draft } = project.da
         <TableOfContents headings={headings} />
       </div>
 
-      <div class="prose">
+      <div class="prose" data-reading-body>
         <slot />
       </div>
 
       <footer class="project-footer">
-        <p><a href="/projects">&larr; All projects</a></p>
+        <div class="share">
+          <button type="button" data-copy-link>Copy link</button>
+          <a href="/projects">All projects &rarr;</a>
+        </div>
       </footer>
     </article>
 
@@ -211,12 +217,29 @@ const { title, description, year, status, tech, repo, demo, draft } = project.da
     font-size: 0.875rem;
   }
 
-  .project-footer a {
-    color: var(--ink-muted);
-    text-decoration: none;
+  .share {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
   }
 
-  .project-footer a:hover {
+  .share button,
+  .share a {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--rule-strong);
+    color: var(--ink-muted);
+    font-family: var(--font-sans);
+    font-size: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .share button:hover,
+  .share a:hover {
     color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 </style>
