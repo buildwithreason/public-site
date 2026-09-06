@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import Tag from "../components/Tag.astro";
+import Comments from "../components/Comments.astro";
 import { formatDate, isoDate, readingTime, type Article } from "../lib/content";
 import { siteConfig } from "../config/site";
 
@@ -11,6 +12,9 @@ interface Props {
 const { article } = Astro.props;
 const { title, description, date, updated, category, tags, image, canonical, draft } =
   article.data;
+
+// Drafts are not published, so there is nothing to discuss yet.
+const showComments = article.data.comments && !draft;
 
 const showUpdated = updated && updated.valueOf() > date.valueOf();
 
@@ -91,6 +95,8 @@ const jsonLd = {
 
       <p class="back"><a href="/writing">&larr; All writing</a></p>
     </footer>
+
+    {showComments && <Comments term={`writing/${article.id}`} />}
   </article>
 </BaseLayout>
 

@@ -50,6 +50,8 @@ const articles = defineCollection({
     image: optionalText,
     /** Shown as "Updated <date>" when present and later than `date`. */
     updated: z.coerce.date().optional(),
+    /** Set false to close discussion on a single piece. */
+    comments: z.boolean().default(true),
   }),
 });
 

@@ -1,0 +1,204 @@
+---
+import { siteConfig } from "../config/site";
+
+interface Props {
+  /**
+   * Stable identifier for the discussion thread. Passed to Giscus as a
+   * "specific" term rather than using pathname mapping: pathname varies with
+   * trailing slashes depending on how the host serves directory-format output,
+   * and two spellings of the same URL would silently create two threads.
+   * A term derived from the content id can never drift.
+   */
+  term: string;
+}
+
+const { term } = Astro.props;
+const c = siteConfig.comments;
+
+// Render nothing at all — no markup, no script, no third-party request — until
+// the Giscus setup in src/config/site.ts is actually complete.
+const configured = c.enabled && Boolean(c.repoId) && Boolean(c.categoryId);
+
+const discussionsUrl = `https://github.com/${c.repo}/discussions`;
+---
+
+{configured && (
+  <section
+    class="comments"
+    id="comments"
+    aria-labelledby="comments-heading"
+    data-giscus
+    data-repo={c.repo}
+    data-repo-id={c.repoId}
+    data-category={c.category}
+    data-category-id={c.categoryId}
+    data-term={term}
+    data-reactions={c.reactionsEnabled ? "1" : "0"}
+    data-input-position={c.inputPosition}
+    data-lang={c.lang}
+    data-theme-light={c.theme.light}
+    data-theme-dark={c.theme.dark}
+  >
+    <h2 id="comments-heading" class="eyebrow">Discussion</h2>
+
+    <p class="intro">
+      {/* Keep inline links on the same line as adjacent text: Astro trims the
+          whitespace when an element ends a line and text begins the next. */}
+      Comments are powered by <a href="https://giscus.app" rel="noopener" target="_blank">Giscus</a> and stored as <a href={discussionsUrl} rel="noopener" target="_blank">GitHub Discussions</a>. Signing in with GitHub is required to post.
+    </p>
+
+    <!-- Filled in by the script below, only once the reader scrolls this far. -->
+    <div class="giscus-mount"></div>
+
+    <noscript>
+      <p class="fallback">
+        Comments need JavaScript. You can join the conversation directly in <a href={discussionsUrl} rel="noopener" target="_blank">GitHub Discussions</a>.
+      </p>
+    </noscript>
+
+    {/*
+      Deliberately `is:inline` rather than a hoisted component script. Astro
+      bundles component scripts into the page whenever the component appears in
+      the graph — even when it renders nothing — which would put ~1.5KB of dead
+      Giscus loader on every article while comments are switched off.
+    */}
+    <script is:inline>
+      (function () {
+        var mount = document.querySelector("[data-giscus]");
+        if (!mount) return;
+
+        var host = "https://giscus.app";
+        var d = mount.dataset;
+
+        // idle -> loading -> ready. Drives the loading affordance in CSS and
+        // makes the load path observable without opening a console.
+        mount.setAttribute("data-state", "idle");
+
+        // Three theme states: explicit dark, explicit light, or following the OS.
+        function currentTheme() {
+          var explicit = document.documentElement.dataset.theme;
+          var dark =
+            explicit === "dark" ||
+            (!explicit && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          return dark ? d.themeDark : d.themeLight;
+        }
+
+        var injected = false;
+
+        function load() {
+          if (injected) return;
+          injected = true;
+          mount.setAttribute("data-state", "loading");
+
+          var s = document.createElement("script");
+          s.src = host + "/client.js";
+          s.async = true;
+          s.crossOrigin = "anonymous";
+          s.setAttribute("data-repo", d.repo);
+          s.setAttribute("data-repo-id", d.repoId);
+          s.setAttribute("data-category", d.category);
+          s.setAttribute("data-category-id", d.categoryId);
+          s.setAttribute("data-mapping", "specific");
+          s.setAttribute("data-term", d.term);
+          s.setAttribute("data-strict", "1");
+          s.setAttribute("data-reactions-enabled", d.reactions);
+          s.setAttribute("data-emit-metadata", "0");
+          s.setAttribute("data-input-position", d.inputPosition);
+          s.setAttribute("data-theme", currentTheme());
+          s.setAttribute("data-lang", d.lang);
+          s.setAttribute("data-loading", "lazy");
+
+          var slot = mount.querySelector(".giscus-mount");
+          if (slot) slot.appendChild(s);
+        }
+
+        // Nothing is fetched from giscus.app until the reader actually reaches
+        // the end of the article. Most visitors never pay for it.
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                  io.disconnect();
+                  load();
+                  return;
+                }
+              }
+            },
+            { rootMargin: "400px 0px" }
+          );
+          io.observe(mount);
+        } else {
+          load();
+        }
+
+        // Giscus posts back once the thread is mounted and on every resize.
+        window.addEventListener("message", function (e) {
+          if (e.origin !== host) return;
+          if (e.data && e.data.giscus) mount.setAttribute("data-state", "ready");
+        });
+
+        // Keep the embedded thread in step with the site theme, however it changed.
+        function syncTheme() {
+          var frame = document.querySelector("iframe.giscus-frame");
+          if (frame && frame.contentWindow) {
+            frame.contentWindow.postMessage(
+              { giscus: { setConfig: { theme: currentTheme() } } },
+              host
+            );
+          }
+        }
+
+        new MutationObserver(syncTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", syncTheme);
+      })();
+    </script>
+  </section>
+)}
+
+<style>
+  .comments {
+    max-width: 46rem;
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+  }
+
+  .intro,
+  .fallback {
+    margin-top: var(--space-xs);
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    max-width: var(--content-max);
+  }
+
+  .intro a,
+  .fallback a {
+    color: var(--ink-secondary);
+    text-underline-offset: 0.2em;
+  }
+
+  .intro a:hover,
+  .fallback a:hover {
+    color: var(--accent);
+  }
+
+  .giscus-mount {
+    margin-top: var(--space-m);
+    /* Reserve height so loading the thread does not shove the footer around. */
+    min-height: 10rem;
+  }
+
+  .comments[data-state="loading"] .giscus-mount::after {
+    content: "Loading discussion\2026";
+    display: block;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+</style>

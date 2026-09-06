@@ -51,6 +51,46 @@ export const siteConfig = {
     reddit: "",
   },
 
+  // --- Comments (Giscus, backed by GitHub Discussions) ----------------------
+  /**
+   * Discussion threads under each article.
+   *
+   * Setup, in order — all four are required before this will render:
+   *   1. The repo must be PUBLIC.
+   *   2. Enable Discussions: repo Settings > General > Features > Discussions.
+   *   3. Install the Giscus app: https://github.com/apps/giscus
+   *   4. Visit https://giscus.app, enter the repo, and copy the generated
+   *      `data-repo-id` and `data-category-id` into the fields below.
+   *
+   * Until `enabled` is true and both ids are filled in, the comments section
+   * is not rendered and no third-party script is loaded.
+   */
+  comments: {
+    enabled: false,
+
+    /** owner/name of the repo holding the discussions. */
+    repo: "kartikmavani/kartik-mavani-site",
+    /** From giscus.app. Looks like "R_kgDO...". */
+    repoId: "",
+
+    /** Discussion category. "Announcements" keeps threads author-created only. */
+    category: "Announcements",
+    /** From giscus.app. Looks like "DIC_kwDO...". */
+    categoryId: "",
+
+    /**
+     * Giscus themes per site theme. Built-in names ("light", "dark",
+     * "dark_dimmed", "transparent_dark", "noborder_light", ...) or an absolute
+     * https URL to a custom CSS theme.
+     */
+    theme: { light: "light", dark: "dark_dimmed" },
+
+    reactionsEnabled: true,
+    /** "top" puts the comment box above the thread. */
+    inputPosition: "bottom" as "top" | "bottom",
+    lang: "en",
+  },
+
   // --- Navigation -----------------------------------------------------------
   nav: [
     { label: "Writing", href: "/writing" },

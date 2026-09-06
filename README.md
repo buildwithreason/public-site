@@ -130,6 +130,61 @@ security headers. Cloudflare picks it up automatically.
 
 ---
 
+## Comments (Giscus)
+
+Article discussions are backed by **GitHub Discussions** via
+[Giscus](https://giscus.app). Threads live in this repo, so there is no third-party
+account, no database and no moderation dashboard to run — you moderate in GitHub.
+
+It is **off by default**. While it is off, no markup and no script reach the page at all.
+
+### Turning it on
+
+1. **Make the repo public.** Giscus reads discussions through the public API; a private
+   repo cannot serve them.
+2. **Enable Discussions** — repo Settings → General → Features → tick *Discussions*.
+3. **Install the Giscus app** on the repo: <https://github.com/apps/giscus>
+4. Go to <https://giscus.app>, enter `kartikmavani/kartik-mavani-site`, and copy the
+   generated `data-repo-id` and `data-category-id`.
+5. Fill them into `comments` in `src/config/site.ts` and set `enabled: true`.
+
+Create a discussion category first if you want one dedicated to article comments.
+`Announcements` is the default here because only maintainers can open threads in it —
+Giscus still creates them on your behalf, which keeps stray discussions out.
+
+### How it behaves
+
+- **Nothing loads until the reader scrolls to the end of an article.** An
+  IntersectionObserver injects the Giscus loader 400px before the section enters view,
+  so most visitors never make a request to `giscus.app` at all.
+- **Threads are keyed by a stable term**, `writing/<slug>`, using `mapping: "specific"`
+  rather than `pathname`. Pathname varies with trailing slashes depending on how the host
+  serves directory-format output, and two spellings of one URL would silently create two
+  separate threads. A term derived from the content id cannot drift.
+- **The embed follows the site theme**, including the manual toggle, via `postMessage`.
+  Set the light and dark Giscus themes under `comments.theme`; both accept built-in names
+  or an absolute https URL to a custom CSS theme.
+- **Without JavaScript**, readers get a link straight to the repo's Discussions page.
+- The section carries `data-state` (`idle` → `loading` → `ready`), which drives the
+  loading line and is handy when debugging.
+
+### Turning it off
+
+Globally: `enabled: false` in `src/config/site.ts`.
+For one article: `comments: false` in its frontmatter.
+Drafts never render comments.
+
+### The trade-off
+
+This is the only third-party code on the site. When a reader reaches the comments, it
+loads an iframe from `giscus.app`, which in turn talks to GitHub — that is a real
+third-party request with the reader's IP, and posting requires a GitHub account. The lazy
+loading limits it to people who actually scroll that far, but it is a genuine departure
+from the otherwise self-contained, ~550-byte-of-JavaScript design. Worth knowing before
+switching it on.
+
+---
+
 ## Structure
 
 ```
@@ -180,3 +235,5 @@ public/
       plain text cards.
 - [ ] Review the four seeded articles and rewrite anything that does not sound like you.
 - [ ] Set up a domain email and add it to `siteConfig.email`.
+- [ ] Turn on comments once the repo is public: enable Discussions, install the Giscus
+      app, and paste the two ids into `siteConfig.comments`.
