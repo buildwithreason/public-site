@@ -11,7 +11,7 @@ export const siteConfig = {
   /** The person. Always primary. */
   name: "Kartik Mavani",
   role: "Staff Software Engineer",
-  company: "AWS",
+  company: "",
 
   /**
    * The publication. Secondary to the person.
