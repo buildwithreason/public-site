@@ -67,7 +67,11 @@ export default function csp({ site }) {
           // Shiki writes per-token colours as style attributes, so inline styles
           // must be allowed. A stylesheet injection is far less dangerous than a
           // script injection, and script-src above is strict.
-          "style-src 'self' 'unsafe-inline'",
+          //
+          // giscus.app is required because the comments client injects its own
+          // stylesheet (giscus.app/default.css) into this page, not just into
+          // its iframe. Without it the thread renders unstyled.
+          "style-src 'self' 'unsafe-inline' https://giscus.app",
           "img-src 'self' data:",
           "font-src 'self'",
           "connect-src 'self' https://giscus.app https://cloudflareinsights.com",

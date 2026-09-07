@@ -106,7 +106,6 @@ const discussionsUrl = `https://github.com/${c.repo}/discussions`;
           s.setAttribute("data-input-position", d.inputPosition);
           s.setAttribute("data-theme", currentTheme());
           s.setAttribute("data-lang", d.lang);
-          s.setAttribute("data-loading", "lazy");
 
           var slot = mount.querySelector(".giscus-mount");
           if (slot) slot.appendChild(s);
@@ -132,11 +131,19 @@ const discussionsUrl = `https://github.com/${c.repo}/discussions`;
           load();
         }
 
-        // Giscus posts back once the thread is mounted and on every resize.
-        window.addEventListener("message", function (e) {
-          if (e.origin !== host) return;
-          if (e.data && e.data.giscus) mount.setAttribute("data-state", "ready");
-        });
+        // Hand over to Giscus as soon as its iframe is in the DOM. From that
+        // point Giscus shows its own "Loading comments…" inside the frame, so
+        // ours must get out of the way rather than race it.
+        var slot = mount.querySelector(".giscus-mount");
+        if (slot && "MutationObserver" in window) {
+          var mo = new MutationObserver(function () {
+            if (slot.querySelector("iframe.giscus-frame")) {
+              mount.setAttribute("data-state", "ready");
+              mo.disconnect();
+            }
+          });
+          mo.observe(slot, { childList: true, subtree: true });
+        }
 
         // Keep the embedded thread in step with the site theme, however it changed.
         function syncTheme() {
@@ -191,8 +198,19 @@ const discussionsUrl = `https://github.com/${c.repo}/discussions`;
 
   .giscus-mount {
     margin-top: var(--space-m);
-    /* Reserve height so loading the thread does not shove the footer around. */
-    min-height: 10rem;
+    /* Reserve roughly what an empty thread occupies so the footer does not jump
+       when the frame lands. */
+    min-height: 16rem;
+  }
+
+  /* Giscus resizes its own frame once it has a thread to size to, but sends no
+     resize for an empty one — the frame then keeps its 150px default and clips
+     the "0 comments / Sign in with GitHub" state. This is the floor for that
+     case; Giscus can still grow the frame past it for a real thread. */
+  .giscus-mount :global(iframe.giscus-frame) {
+    width: 100%;
+    min-height: 16rem;
+    border: 0;
   }
 
   .comments[data-state="loading"] .giscus-mount::after {
