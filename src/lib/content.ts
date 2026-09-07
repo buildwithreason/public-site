@@ -1,5 +1,8 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { siteConfig } from "../config/site";
+import { slugify, rankRelated } from "./text";
+
+export { slugify, readingTime, isoDate } from "./text";
 
 export type Article = CollectionEntry<"articles">;
 export type Project = CollectionEntry<"projects">;
@@ -31,15 +34,6 @@ export async function getProjects(): Promise<Project[]> {
   return projects.sort((a, b) => a.data.order - b.data.order);
 }
 
-/**
- * Derived from the body rather than typed into frontmatter, which is the kind
- * of field that silently goes stale after an edit. 220 wpm suits dense
- * technical prose read by engineers.
- */
-export function readingTime(body: string | undefined): string {
-  const words = (body ?? "").trim().split(/\s+/).filter(Boolean).length;
-  return `${Math.max(1, Math.round(words / 220))} min read`;
-}
 
 export function formatDate(date: Date): string {
   return date.toLocaleDateString(siteConfig.locale, {
@@ -50,10 +44,6 @@ export function formatDate(date: Date): string {
   });
 }
 
-/** Machine-readable date for <time datetime> and structured data. */
-export function isoDate(date: Date): string {
-  return date.toISOString().split("T")[0]!;
-}
 
 /** Group articles by category, preserving the newest-first order within each. */
 export function groupByCategory(articles: Article[]): Map<string, Article[]> {
@@ -66,14 +56,6 @@ export function groupByCategory(articles: Article[]): Map<string, Article[]> {
   return groups;
 }
 
-/** URL-safe slug for tag and category routes. */
-export function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/&/g, " and ")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 export interface Adjacent {
   newer?: Article;
@@ -90,27 +72,16 @@ export function getAdjacent(articles: Article[], id: string): Adjacent {
   return { newer: articles[i - 1], older: articles[i + 1] };
 }
 
-/**
- * Related reading, scored rather than random: a shared category is worth more
- * than a shared tag, and ties break towards the more recent piece.
- */
+/** Related reading, scored rather than random. Ranking lives in ./text. */
 export function getRelated(current: Article, all: Article[], limit = 3): Article[] {
-  const tags = new Set(current.data.tags.map(slugify));
-
-  return all
-    .filter((a) => a.id !== current.id)
-    .map((a) => {
-      let score = a.data.category === current.data.category ? 3 : 0;
-      for (const tag of a.data.tags) if (tags.has(slugify(tag))) score += 1;
-      return { article: a, score };
-    })
-    .filter((entry) => entry.score > 0)
-    .sort(
-      (x, y) =>
-        y.score - x.score || y.article.data.date.valueOf() - x.article.data.date.valueOf()
-    )
-    .slice(0, limit)
-    .map((entry) => entry.article);
+  const shape = (a: Article) => ({
+    id: a.id,
+    category: a.data.category,
+    tags: a.data.tags,
+    date: a.data.date,
+  });
+  const byId = new Map(all.map((a) => [a.id, a]));
+  return rankRelated(shape(current), all.map(shape), limit).map((r) => byId.get(r.id)!);
 }
 
 /** Every tag in use, with counts, most used first. */
